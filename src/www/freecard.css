@@ -7,6 +7,75 @@ body {
   margin: 0;
 }
 
+body > .modalStack {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99;
+  pointer-events: none;
+}
+
+body > .toastContainer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.modalStack > .modalBlotter {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  opacity: 0.50;
+  pointer-events: initial;
+}
+
+.modalStack > .modalAligner {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.modalAligner > .modal {
+  min-width: 100px;
+  min-height: 100px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 0.5em;
+  box-shadow: #000 0 0 1em;
+  pointer-events: initial;
+}
+
+.toastContainer > .toast {
+  margin: 1em;
+  padding: 0.5em;
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #000;
+  box-shadow: #000 0 0 1em;
+  pointer-events: initial;
+  cursor: pointer;
+  transition: opacity 1s;
+}
+
+.toastContainer > .toast.error {
+  border: 2px solid #800;
+}
+
+.transparent {
+  opacity: 0;
+}
+
 /* Root.
  *************************************************/
 
@@ -23,36 +92,6 @@ body {
   display: flex;
   align-items: stretch;
   justify-content: stretch;
-}
-
-.HeaderController {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  padding: 0.5em;
-}
-
-.HeaderController > button {
-  border: 3px solid #ccc;
-  border-radius: 0.5em;
-  background-color: #206028;
-  color: #fff;
-  min-width: 10em;
-  min-height: 6em;
-  font-family: serif;
-  font-weight: bold;
-}
-
-.HeaderController > button:hover {
-  border-color: #ff0;
-}
-
-.HeaderController > button:active {
-  background-color: #308030;
-}
-
-.HeaderController > .spacer {
-  flex: 1;
 }
 
 .FooterController {
@@ -73,6 +112,80 @@ body {
   .ChatController {
     max-height: 85vh; /* TODO Can we tell it not to grow vertically, without knowing the initial height? */
   }
+}
+
+/* Header.
+ **************************************************/
+
+.HeaderController {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  padding: 0.5em;
+}
+
+.HeaderController > button {
+  border: 3px solid #ccc;
+  border-radius: 0.5em;
+  background-color: #206028;
+  color: #fff;
+  min-width: 10em;
+  min-height: 6em;
+  font-family: serif;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 0.5em;
+}
+
+.HeaderController > button:hover {
+  border-color: #ff0;
+}
+
+.HeaderController > button:active {
+  background-color: #308030;
+}
+
+.HeaderController > .spacer {
+  flex: 1;
+}
+
+.ConnectionController {
+  border: 3px solid #ccc;
+  border-radius: 0.5em;
+  background-color: #206028;
+  color: #fff;
+  font-family: serif;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 0.5em;
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  text-align: center;
+}
+
+.ConnectionController .stateTattle {
+}
+
+.ConnectionController .stateTattle.connected {
+}
+
+.ConnectionController .stateTattle.disconnected {
+}
+
+.ConnectionController .playerTattle {
+}
+
+.ConnectionController .lobbyTattle {
+  flex: 1;
+}
+
+.ConnectionController .actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 /* Field.
@@ -151,4 +264,21 @@ body {
 
 .ChatController > .controls > .text {
   flex: 1;
+}
+
+/* Modals.
+ *******************************************************/
+ 
+.GeneralInputModal {
+  padding: 1em;
+}
+
+.GeneralInputModal > form > * {
+  margin: 0.25em 0;
+}
+
+.GeneralInputModal .actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }

@@ -16,10 +16,11 @@ export class Dom {
     observer.observe(document.body, { subtree: true, childList: true });
   }
   
-  /* args is context-sensitive:
+  /* Create a DOM element.
+   * args is context-sensitive:
    *  - string: innerText
    *  - array: CSS class names
-   *  - object: HTML attributes, or "on-NAME":cb()
+   *  - object: HTML attributes, or "on-EVENT":cb()
    */
   spawn(parent, tagName, ...args) {
     const element = this.document.createElement(tagName);
@@ -44,12 +45,48 @@ export class Dom {
     return element;
   }
   
+  /* Create an element under (parent) and connect to a new instance of (clazz).
+   * Returns the controller instance, not the element.
+   */
   spawnController(parent, clazz) {
     const element = this.createElementForControllerClass(clazz);
     const controller = this.injector.getInstance(clazz, [element]);
     element.__controller = controller;
     parent.appendChild(element);
     return controller;
+  }
+  
+  /* Create a modal wrapper on the top, and put a new controller inside it.
+   * Returns the controller instance.
+   */
+  presentModal(clazz) {
+    const container = this.createModalContainer();
+    const controller = this.spawnController(container, clazz);
+    return controller;
+  }
+  
+  dismissModal() {
+    const modal = this.findTopModal();
+    if (!modal) return;
+    modal.remove();
+    this.requireModalBlotter();
+  }
+  
+  /* Add a passive message floating above the page.
+   * For error messages and such.
+   */
+  addToast(message, clss, timeoutMs) {
+    const container = this.requireToastContainer();
+    const element = this.spawn(container, "DIV", message,
+      ["toast", ...(clss || [])],
+      { "on-click": () => element.remove() }
+    );
+    if (timeoutMs > 0) {
+      this.window.setTimeout(() => {
+        element.addEventListener("transitionend", () => element.remove());
+        element.classList.add("transparent");
+      }, timeoutMs);
+    }
   }
   
   /* Remainder is, if not private, probably not interesting.
@@ -91,6 +128,51 @@ export class Dom {
         }
       }
     }
+  }
+  
+  findTopModal() {
+    const all = Array.from(this.document.querySelectorAll("body > .modalStack > .modalAligner"));
+    return all[all.length - 1];
+  }
+  
+  createModalContainer() {
+    const aligner = this.spawn(this.requireModalStack(), "DIV", ["modalAligner"]);
+    const container = this.spawn(aligner, "DIV", ["modal"]);
+    this.requireModalBlotter();
+    return container;
+  }
+  
+  requireModalStack() {
+    let stack = this.document.querySelector(".modalStack");
+    if (!stack) {
+      stack = this.spawn(this.document.body, "DIV", ["modalStack"]);
+    }
+    return stack;
+  }
+  
+  // Creates, restacks, deletes, whatever is needed.
+  requireModalBlotter() {
+    const stack = this.requireModalStack();
+    let blotter = this.document.querySelector(".modalBlotter");
+    const lastModal = this.findTopModal();
+    if (lastModal) {
+      if (!blotter) {
+        blotter = this.spawn(stack, "DIV", ["modalBlotter"], { "on-click": () => this.dismissModal() });
+      }
+      stack.insertBefore(blotter, lastModal);
+    } else {
+      if (blotter) {
+        blotter.remove();
+      }
+    }
+  }
+  
+  requireToastContainer() {
+    let element = this.document.querySelector("body > .toastContainer");
+    if (!element) {
+      element = this.spawn(this.document.body, "DIV", ["toastContainer"]);
+    }
+    return element;
   }
 }
 
