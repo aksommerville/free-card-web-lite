@@ -1,0 +1,154 @@
+html {
+  background-color: #206028;
+  color: #fff;
+}
+
+body {
+  margin: 0;
+}
+
+/* Root.
+ *************************************************/
+
+.RootController {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.RootController .main {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.HeaderController {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  padding: 0.5em;
+}
+
+.HeaderController > button {
+  border: 3px solid #ccc;
+  border-radius: 0.5em;
+  background-color: #206028;
+  color: #fff;
+  min-width: 10em;
+  min-height: 6em;
+  font-family: serif;
+  font-weight: bold;
+}
+
+.HeaderController > button:hover {
+  border-color: #ff0;
+}
+
+.HeaderController > button:active {
+  background-color: #308030;
+}
+
+.HeaderController > .spacer {
+  flex: 1;
+}
+
+.FooterController {
+}
+
+@media(max-width:599.9px) {
+  .RootController .main {
+    flex-direction: column;
+  }
+  .ChatController {
+    max-height: 30vh;
+  }
+}
+@media(min-width:600px) {
+  .RootController .main {
+    flex-direction: row;
+  }
+  .ChatController {
+    max-height: 85vh; /* TODO Can we tell it not to grow vertically, without knowing the initial height? */
+  }
+}
+
+/* Field.
+ ******************************************************/
+
+.FieldController {
+  flex: 1;
+  min-width: 350px;
+  position: relative;
+}
+
+.FieldController .card {
+  position: absolute;
+  border-radius: 4px;
+  background-color: #fff;
+  border: 1px solid #000;
+  color: #000;
+  cursor: pointer;
+}
+
+.FieldController .card.facedown {
+  background-color: #f00;
+}
+
+.FieldController .card.turn {
+  /*transform: rotate(90deg);*/
+}
+
+/* Chat.
+ **************************************************/
+ 
+.ChatController {
+  flex: 1;
+  min-width: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.ChatController > .log {
+  width: 100%;
+  flex: 1;
+  overflow-y: scroll;
+}
+
+.ChatController > .log > .message {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: top;
+  margin-bottom: 0.5em;
+}
+
+.ChatController > .log > .message > .speaker {
+  background-color: #ff0;/*TODO different per user */
+  color: #000;
+  border-radius: 0.5em;
+  font-weight: bold;
+  font-family: sans-serif;
+  height: 1.5em;
+  margin: 0.25em 0.5em;
+  margin-top: 0;
+  padding: 0 0.25em;
+  font-size: 0.6em;
+}
+
+.ChatController > .log > .message > .content {
+  flex: 1;
+}
+
+.ChatController > .controls {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.ChatController > .controls > .text {
+  flex: 1;
+}
