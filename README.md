@@ -80,3 +80,5 @@ WebSocket messages
 - [ ] Everything
 - [ ] Webpack
 - [ ] Communication
+- - [ ] How do I associate the WebSocket with the session from /create or /join?
+- [ ] Esc to dismiss modal

@@ -282,3 +282,23 @@ body > .toastContainer {
   flex-direction: row;
   justify-content: flex-end;
 }
+ 
+.NewGameModal {
+  padding: 1em;
+}
+
+.NewGameModal .actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+ 
+.JoinGameModal {
+  padding: 1em;
+}
+
+.JoinGameModal .actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}

@@ -155,7 +155,7 @@ export class Comm {
     try {
       body = JSON.parse(event.data) || ""; // don't let it be null
     } catch (e) {
-      console.log(`failed to evaluate ws message body`, e);
+      //console.log(`failed to evaluate ws message body`, e);// don't log it; this is actually normal
       body = event.data || "";
       if ((body === "connected") || (body === "disconnected")) {
         // don't let it match our connection-marker events

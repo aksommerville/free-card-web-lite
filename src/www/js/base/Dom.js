@@ -12,8 +12,15 @@ export class Dom {
     this.document = document;
     this.window = window;
     
+    this.nextDiscriminator = 1;
+    
     const observer = new MutationObserver(event => this.onMutation(event));
     observer.observe(document.body, { subtree: true, childList: true });
+  }
+  
+  // A small integer that I've never returned before, for uniquifying IDs.
+  discriminator() {
+    return this.nextDiscriminator++;
   }
   
   /* Create a DOM element.
