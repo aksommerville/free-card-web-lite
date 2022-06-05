@@ -153,15 +153,28 @@ export class ConnectionController {
         lobbyCode: "",
         gameType: "",
         isPublic: false,
+        players: [],
       });
+      
+    } else if (event.goodbye) {
+      this.sessionService.removePlayerById(event.playerId);
+      
+    } else if (event.intent === "join") {
+      if (this.validation.validPlayer(event.player)) {
+        this.sessionService.addPlayer(event.player);
+      }
       
     } else {
       const changes = {};
       if (this.validation.validLobbyCode(event.lobbyCode)) changes.lobbyCode = event.lobbyCode;
       if (this.validation.validLobbyName(event.lobby?.name)) changes.lobbyName = event.lobby.name;
       if (this.validation.validLobbyIsPublic(event.lobby?.isPublic)) changes.isPublic = event.lobby.isPublic;
-      if (this.validation.validPlayers(event.lobby?.players)) changes.players = event.lobby.players;
-      if (this.validation.validPlayerId(event.playerId)) changes.playerId = event.playerId;
+      if (this.validation.validPlayers(event.lobby?.players)) {
+        changes.players = event.lobby.players;
+        // If I'm listed in players, yoink my playerId: I think this is the only way we get it.
+        const me = changes.players.find(p => p.name === this.state.playerName);
+        if (me?.playerId) changes.playerId = me.playerId;
+      }
       this.sessionService.replaceState(changes);
     }
   }

@@ -79,6 +79,12 @@ WebSocket messages
 
 - [ ] Everything
 - [ ] Webpack
-- [ ] Communication
-- - [ ] How do I associate the WebSocket with the session from /create or /join?
+- [x] Communication
+- - [x] How do I associate the WebSocket with the session from /create or /join?
+- - [x] Chat
 - [ ] Esc to dismiss modal
+- [ ] Menu for gameType
+- [ ] Radio button for isPublic
+- [ ] Receive game state (beyond party and chat)
+- [ ] Send plays
+- [ ] ChatController: listen on sessionService, enable UI only when joined

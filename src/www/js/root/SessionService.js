@@ -45,6 +45,20 @@ export class SessionService {
     for (const { cb } of this.listeners) cb(this.state);
   }
   
+  removePlayerById(playerId) {
+    this.replaceState({
+      players: this.state.players.filter(p => p.playerId !== playerId),
+    });
+  }
+  
+  addPlayer(player) {
+    if (!player) return;
+    if (this.state.players.find(p => p.playerId === player.playerId)) return;
+    this.replaceState({
+      players: [...this.state.players, player],
+    });
+  }
+  
   replaceState(changes) {
     if (!changes) return;
     let changed = false;
@@ -94,6 +108,10 @@ export class SessionService {
   }
   
   onWsMessage(msg) {
+  }
+  
+  playerNameById(playerId) {
+    return this.state.players.find(p => p.playerId === playerId)?.name;
   }
 }
 

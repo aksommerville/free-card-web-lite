@@ -3,16 +3,29 @@
  */
  
 import { Dom } from "../base/Dom.js";
+import { Comm } from "../base/Comm.js";
+import { SessionService } from "../root/SessionService.js";
 
 export class ChatController {
   static getDependencies() {
-    return [HTMLElement, Dom];
+    return [HTMLElement, Dom, Comm, SessionService];
   }
-  constructor(element, dom) {
+  constructor(element, dom, comm, sessionService) {
     this.element = element;
     this.dom = dom;
+    this.comm = comm;
+    this.sessionService = sessionService;
     
     this.buildUi();
+    
+    this.wsListener = this.comm.listenWebSocket(event => this.onWebSocket(event));
+  }
+  
+  //TODO listen on sessionService, enable UI only when joined
+  
+  onRemoveFromDom() {
+    this.comm.unlistenWebSocket(this.wsListener);
+    this.wsListener = -1;
   }
   
   buildUi() {
@@ -28,9 +41,13 @@ export class ChatController {
     const textElement = this.element.querySelector(".text");
     const text = textElement.value;
     textElement.value = "";
-    //TODO send to server.
-    // Should we wait for the server's echo before appending to our log?
-    this.addToLog("me", text);
+    this.addToLog("me", text); // Server does not echo our own messages, take it on faith.
+    this.comm.sendWebSocket({
+      chat: true,
+      message: text,
+      playerId: this.sessionService.state.playerId,
+      lobbyCode: this.sessionService.state.lobbyCode,
+    });
   }
   
   onKeyPress(event) {
@@ -48,10 +65,46 @@ export class ChatController {
     const log = this.element.querySelector(".log");
     const message = this.dom.spawn(log, "DIV", ["message"]);
     const speakerBubble = this.dom.spawn(message, "DIV", ["speaker"], speaker);
-    //TODO assign bubble color based on speaker:
-    //const r16 = () => Math.floor(Math.random()*16).toString(16);
-    //speakerBubble.style.backgroundColor = `#${r16()}${r16()}${r16()}`;
+    speakerBubble.style.backgroundColor = this.colorForSpeaker(speaker);
     this.dom.spawn(message, "DIV", ["content"], text);
     log.scroll(0, log.scrollTopMax);
+  }
+  
+  colorForSpeaker(speaker) {
+    if (speaker === "me") return "#ff0";
+    return [
+      "#0ff",
+      "#fff",
+      "#f0f",
+      "#a6a",
+      
+      "#08f",
+      "#0f8",
+      "#f80",
+      "#8f0",
+      
+      "#b5f",
+      "#f08",
+      "#f8f",
+      "#8ff",
+      
+      "#fcf",
+      "#cff",
+      "#ffc",
+      "#0aa",
+    ][this.speakerHash16(speaker)];
+  }
+  
+  speakerHash16(speaker) {
+    let hash = 0;
+    for (let i=speaker.length; i-->0; ) hash += speaker.charCodeAt(i);
+    return hash & 15;
+  }
+  
+  onWebSocket(event) {
+    if (event.chat) {
+      const playerName = this.sessionService.playerNameById(event.playerId);
+      this.addToLog(playerName, event.message || "");
+    }
   }
 }

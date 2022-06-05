@@ -188,6 +188,23 @@ body > .toastContainer {
   justify-content: center;
 }
 
+.PartyController {
+  border: 3px solid #ccc;
+  border-radius: 0.5em;
+  background-color: #206028;
+  color: #fff;
+  font-family: serif;
+  font-size: 10pt;
+  cursor: pointer;
+  margin: 0 0.5em;
+  padding: 0.5em 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
+  text-align: left;
+}
+
 /* Field.
  ******************************************************/
 
