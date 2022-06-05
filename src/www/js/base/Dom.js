@@ -16,6 +16,8 @@ export class Dom {
     
     const observer = new MutationObserver(event => this.onMutation(event));
     observer.observe(document.body, { subtree: true, childList: true });
+    
+    this.document.body.addEventListener("keydown", (event) => this.onKeyDown(event));
   }
   
   // A small integer that I've never returned before, for uniquifying IDs.
@@ -180,6 +182,15 @@ export class Dom {
       element = this.spawn(this.document.body, "DIV", ["toastContainer"]);
     }
     return element;
+  }
+  
+  /* ESC dismisses the top modal.
+   * Nothing else from the keyboard, at this scope.
+   * NB Escape is not delivered as keypress, only keydown it seems.
+   */
+  onKeyDown(event) {
+    if (event.key !== "Escape") return;
+    this.dismissModal();
   }
 }
 
